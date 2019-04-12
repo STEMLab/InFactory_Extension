@@ -51,7 +51,7 @@ It is explained at the wiki.
 
 ## Authors
 
-* #Dohun Kang - IndoorGML CRUD DAO developer dhkang@pnu.edu
+* Dohun Kang - IndoorGML CRUD DAO developer dhkang@pnu.edu
 ## Contributing
 
 Please refer to each project's style guidelines and guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
