@@ -14,22 +14,22 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 
 import edu.pnu.stem.geometry.jts.Solid;
-import net.opengis.gml.v_3_2_1.AbstractRingType;
-import net.opengis.gml.v_3_2_1.AbstractSurfaceType;
-import net.opengis.gml.v_3_2_1.CompositeSurfaceType;
-import net.opengis.gml.v_3_2_1.CoordinatesType;
-import net.opengis.gml.v_3_2_1.DirectPositionListType;
-import net.opengis.gml.v_3_2_1.DirectPositionType;
-import net.opengis.gml.v_3_2_1.LineStringType;
-import net.opengis.gml.v_3_2_1.LinearRingType;
-import net.opengis.gml.v_3_2_1.OrientableSurfaceType;
-import net.opengis.gml.v_3_2_1.PointType;
-import net.opengis.gml.v_3_2_1.PolygonType;
-import net.opengis.gml.v_3_2_1.RingType;
-import net.opengis.gml.v_3_2_1.ShellType;
-import net.opengis.gml.v_3_2_1.SolidType;
-import net.opengis.gml.v_3_2_1.SurfacePropertyType;
-import net.opengis.gml.v_3_2_1.SurfaceType;
+import net.opengis.gml.v_3_2.AbstractRingType;
+import net.opengis.gml.v_3_2.AbstractSurfaceType;
+import net.opengis.gml.v_3_2.CompositeSurfaceType;
+import net.opengis.gml.v_3_2.CoordinatesType;
+import net.opengis.gml.v_3_2.DirectPositionListType;
+import net.opengis.gml.v_3_2.DirectPositionType;
+import net.opengis.gml.v_3_2.LineStringType;
+import net.opengis.gml.v_3_2.LinearRingType;
+import net.opengis.gml.v_3_2.OrientableSurfaceType;
+import net.opengis.gml.v_3_2.PointType;
+import net.opengis.gml.v_3_2.PolygonType;
+import net.opengis.gml.v_3_2.RingType;
+import net.opengis.gml.v_3_2.ShellType;
+import net.opengis.gml.v_3_2.SolidType;
+import net.opengis.gml.v_3_2.SurfacePropertyType;
+import net.opengis.gml.v_3_2.SurfaceType;
 
 public class Convert2JTSGeometry {
 	

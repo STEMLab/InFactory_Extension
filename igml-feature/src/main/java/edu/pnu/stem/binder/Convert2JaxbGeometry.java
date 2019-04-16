@@ -15,20 +15,20 @@ import org.locationtech.jts.geom.Polygon;
 
 import edu.pnu.stem.geometry.jts.Solid;
 import edu.pnu.stem.util.GeometryUtil;
-import net.opengis.gml.v_3_2_1.AbstractRingPropertyType;
-import net.opengis.gml.v_3_2_1.DirectPositionListType;
-import net.opengis.gml.v_3_2_1.DirectPositionType;
-import net.opengis.gml.v_3_2_1.LineStringType;
-import net.opengis.gml.v_3_2_1.LinearRingType;
-import net.opengis.gml.v_3_2_1.PointType;
-import net.opengis.gml.v_3_2_1.PolygonType;
-import net.opengis.gml.v_3_2_1.ShellPropertyType;
-import net.opengis.gml.v_3_2_1.ShellType;
-import net.opengis.gml.v_3_2_1.SolidType;
-import net.opengis.gml.v_3_2_1.SurfacePropertyType;
+import net.opengis.gml.v_3_2.AbstractRingPropertyType;
+import net.opengis.gml.v_3_2.DirectPositionListType;
+import net.opengis.gml.v_3_2.DirectPositionType;
+import net.opengis.gml.v_3_2.LineStringType;
+import net.opengis.gml.v_3_2.LinearRingType;
+import net.opengis.gml.v_3_2.PointType;
+import net.opengis.gml.v_3_2.PolygonType;
+import net.opengis.gml.v_3_2.ShellPropertyType;
+import net.opengis.gml.v_3_2.ShellType;
+import net.opengis.gml.v_3_2.SolidType;
+import net.opengis.gml.v_3_2.SurfacePropertyType;
 
 public class Convert2JaxbGeometry {
-	private final static net.opengis.gml.v_3_2_1.ObjectFactory gmlFactory = new net.opengis.gml.v_3_2_1.ObjectFactory();
+	private final static net.opengis.gml.v_3_2.ObjectFactory gmlFactory = new net.opengis.gml.v_3_2.ObjectFactory();
 	
 	public static SolidType Convert2SolidType(Solid feature){
 		MultiPolygon shell = feature.getShell();

@@ -48,10 +48,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.ogc</groupId>
-			<artifactId>gml-v_3_2_1</artifactId>
+			<artifactId>gml-v_3_2</artifactId>
 			<version>${ogc-schemas.version}</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/gml-v_3_2_1-2.6.2-SNAPSHOT.jar</systemPath>
+			<systemPath>${project.basedir}/lib/gml-v_3_2-2.6.2-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.ogc</groupId>

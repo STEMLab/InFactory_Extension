@@ -33,16 +33,16 @@ import edu.pnu.stem.feature.navigation.ConnectionSpace;
 import edu.pnu.stem.feature.navigation.GeneralSpace;
 import edu.pnu.stem.feature.navigation.TransitionSpace;
 import edu.pnu.stem.geometry.jts.Solid;
-import net.opengis.gml.v_3_2_1.CodeType;
-import net.opengis.gml.v_3_2_1.CurvePropertyType;
-import net.opengis.gml.v_3_2_1.LineStringType;
-import net.opengis.gml.v_3_2_1.PointPropertyType;
-import net.opengis.gml.v_3_2_1.PointType;
-import net.opengis.gml.v_3_2_1.PolygonType;
-import net.opengis.gml.v_3_2_1.SolidPropertyType;
-import net.opengis.gml.v_3_2_1.SolidType;
-import net.opengis.gml.v_3_2_1.StringOrRefType;
-import net.opengis.gml.v_3_2_1.SurfacePropertyType;
+import net.opengis.gml.v_3_2.CodeType;
+import net.opengis.gml.v_3_2.CurvePropertyType;
+import net.opengis.gml.v_3_2.LineStringType;
+import net.opengis.gml.v_3_2.PointPropertyType;
+import net.opengis.gml.v_3_2.PointType;
+import net.opengis.gml.v_3_2.PolygonType;
+import net.opengis.gml.v_3_2.SolidPropertyType;
+import net.opengis.gml.v_3_2.SolidType;
+import net.opengis.gml.v_3_2.StringOrRefType;
+import net.opengis.gml.v_3_2.SurfacePropertyType;
 import net.opengis.indoorgml.core.v_1_0.CellSpaceBoundaryGeometryType;
 import net.opengis.indoorgml.core.v_1_0.CellSpaceBoundaryMemberType;
 import net.opengis.indoorgml.core.v_1_0.CellSpaceBoundaryPropertyType;
@@ -85,7 +85,7 @@ import net.opengis.indoorgml.navigation.v_1_0.TransitionSpaceType;
 public class Convert2JaxbClass {
 	static net.opengis.indoorgml.core.v_1_0.ObjectFactory indoorgmlcoreOF = new net.opengis.indoorgml.core.v_1_0.ObjectFactory();
 
-	static net.opengis.gml.v_3_2_1.ObjectFactory gmlOF = new net.opengis.gml.v_3_2_1.ObjectFactory();
+	static net.opengis.gml.v_3_2.ObjectFactory gmlOF = new net.opengis.gml.v_3_2.ObjectFactory();
 
 	static ObjectFactory indoorgmlnaviOF = new net.opengis.indoorgml.navigation.v_1_0.ObjectFactory();
 

@@ -41,7 +41,7 @@ public class Mashaller {
 		Marshaller marshaller;
 
 		context = JAXBContext.newInstance("net.opengis.indoorgml.core.v_1_0" + ":net.opengis.indoorgml.navigation.v_1_0"
-				+ ":net.opengis.gml.v_3_2_1");
+				+ ":net.opengis.gml.v_3_2");
 
 		File output = null;
 
@@ -78,7 +78,7 @@ public class Mashaller {
 		JAXBContext context;
 		Marshaller marshaller;
 
-		context = JAXBContext.newInstance("net.opengis.indoorgml.core.v_1_0" + ":net.opengis.indoorgml.navigation.v_1_0" + ":net.opengis.gml.v_3_2_1");
+		context = JAXBContext.newInstance("net.opengis.indoorgml.core.v_1_0" + ":net.opengis.indoorgml.navigation.v_1_0" + ":net.opengis.gml.v_3_2");
 
 		File output = null;
 
