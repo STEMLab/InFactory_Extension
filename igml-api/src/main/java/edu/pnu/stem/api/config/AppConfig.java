@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import edu.pnu.stem.api.core.Container;
+import edu.pnu.stem.api.Container;
 
 /**
  * @author hyung

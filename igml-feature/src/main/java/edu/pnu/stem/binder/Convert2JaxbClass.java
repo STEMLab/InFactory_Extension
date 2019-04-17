@@ -31,6 +31,7 @@ import edu.pnu.stem.feature.navigation.AnchorSpace;
 import edu.pnu.stem.feature.navigation.ConnectionBoundary;
 import edu.pnu.stem.feature.navigation.ConnectionSpace;
 import edu.pnu.stem.feature.navigation.GeneralSpace;
+import edu.pnu.stem.feature.navigation.NonNavigableSpace;
 import edu.pnu.stem.feature.navigation.TransitionSpace;
 import edu.pnu.stem.geometry.jts.Solid;
 import net.opengis.gml.v_3_2.CodeType;
@@ -80,7 +81,7 @@ import net.opengis.indoorgml.navigation.v_1_0.ConnectionSpaceType;
 import net.opengis.indoorgml.navigation.v_1_0.GeneralSpaceType;
 import net.opengis.indoorgml.navigation.v_1_0.ObjectFactory;
 import net.opengis.indoorgml.navigation.v_1_0.TransitionSpaceType;
-
+import net.opengis.indoorgml.nonnavigation.v_1_0.NonNavigableSpaceType;
 
 public class Convert2JaxbClass {
 	static net.opengis.indoorgml.core.v_1_0.ObjectFactory indoorgmlcoreOF = new net.opengis.indoorgml.core.v_1_0.ObjectFactory();
@@ -89,9 +90,10 @@ public class Convert2JaxbClass {
 
 	static ObjectFactory indoorgmlnaviOF = new net.opengis.indoorgml.navigation.v_1_0.ObjectFactory();
 
+	static net.opengis.indoorgml.nonnavigation.v_1_0.ObjectFactory indoorgmlnonnaviOF = new net.opengis.indoorgml.nonnavigation.v_1_0.ObjectFactory();
+
 	@SuppressWarnings("unchecked")
 	public static CellSpaceType change2JaxbClass(IndoorGMLMap savedMap, CellSpace feature) throws JAXBException {
-		
 
 		CellSpaceType newFeature = indoorgmlcoreOF.createCellSpaceType();
 		StatePropertyType duality = new StatePropertyType();
@@ -161,7 +163,7 @@ public class Convert2JaxbClass {
 				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
 			}
 		}
-		
+
 		return newFeature;
 	}
 
@@ -436,8 +438,9 @@ public class Convert2JaxbClass {
 			for (int i = 0; i < feature.getStateMember().size(); i++) {
 				State tempstate = (State) savedMap.getFeature(feature.getStateMember().get(i).getId());
 				StateType tempstatetype = change2JaxbClass(savedMap, tempstate);
+				JAXBElement<StateType> jaxbState = indoorgmlcoreOF.createState(tempstatetype);
 				StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
-				tempstatemember.setState(tempstatetype);
+				tempstatemember.setState(jaxbState);
 				smTypeList.add(tempstatemember);
 			}
 
@@ -460,16 +463,16 @@ public class Convert2JaxbClass {
 			for (int i = 0; i < feature.getCellSpaceMember().size(); i++) {
 
 				if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("GeneralSpace")) {
-					
-					
-					GeneralSpace tempcellspace = (GeneralSpace) savedMap.getFeature(feature.getCellSpaceMember().get(i).getId());
+
+					GeneralSpace tempcellspace = (GeneralSpace) savedMap
+							.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
 					tempcellspacemember.setCellSpace(
 							indoorgmlnaviOF.createGeneralSpace(change2JaxbClass(savedMap, tempcellspace)));
 					cellspacemember.add(tempcellspacemember);
 
 				} else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("TransitionSpace")) {
-					
+
 					TransitionSpace tempcellspace = (TransitionSpace) savedMap
 							.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
@@ -477,7 +480,7 @@ public class Convert2JaxbClass {
 							indoorgmlnaviOF.createTransitionSpace(change2JaxbClass(savedMap, tempcellspace)));
 					cellspacemember.add(tempcellspacemember);
 				} else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("ConnectionSpace")) {
-					
+
 					ConnectionSpace tempcellspace = (ConnectionSpace) savedMap
 							.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
@@ -486,7 +489,7 @@ public class Convert2JaxbClass {
 					cellspacemember.add(tempcellspacemember);
 
 				} else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("AnchorSpace")) {
-					
+
 					AnchorSpace tempcellspace = (AnchorSpace) savedMap
 							.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
@@ -494,12 +497,19 @@ public class Convert2JaxbClass {
 							.setCellSpace(indoorgmlnaviOF.createAnchorSpace(change2JaxbClass(savedMap, tempcellspace)));
 					cellspacemember.add(tempcellspacemember);
 
-				} else {
-					
-					CellSpace tempcellspace = (CellSpace) savedMap
-							.getFeature(feature.getCellSpaceMember().get(i).getId());
+				} else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("NonNavigableSpace")) {
+
+					NonNavigableSpace tempcellspace = (NonNavigableSpace) savedMap.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
-					tempcellspacemember.setCellSpace(indoorgmlcoreOF.createCellSpace(change2JaxbClass(savedMap, tempcellspace)));
+					tempcellspacemember.setCellSpace(indoorgmlnonnaviOF.createNonNavigableSpace(change2JaxbClass(savedMap, tempcellspace)));
+					cellspacemember.add(tempcellspacemember);
+
+				} else {
+
+					CellSpace tempcellspace = (CellSpace) savedMap.getFeature(feature.getCellSpaceMember().get(i).getId());
+					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
+					tempcellspacemember
+							.setCellSpace(indoorgmlcoreOF.createCellSpace(change2JaxbClass(savedMap, tempcellspace)));
 					cellspacemember.add(tempcellspacemember);
 				}
 
@@ -509,28 +519,35 @@ public class Convert2JaxbClass {
 
 		if (feature.getCellSpaceBoundaryMember() != null) {
 			for (int i = 0; i < feature.getCellSpaceBoundaryMember().size(); i++) {
-				
+
 				if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName().equals("AnchorBoundary")) {
-					
-					AnchorBoundary tempcellspace = (AnchorBoundary) savedMap.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
-					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceBoundaryMemberType();
-					tempcellspacemember.setCellSpaceBoundary(indoorgmlnaviOF.createAnchorBoundary(change2JaxbClass(savedMap, tempcellspace)));
+
+					AnchorBoundary tempcellspace = (AnchorBoundary) savedMap
+							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlnaviOF.createAnchorBoundary(change2JaxbClass(savedMap, tempcellspace)));
 					cellspaceboundarymember.add(tempcellspacemember);
-				}
-				else if(feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName().equals("ConnectionBoundary")) {
-					
-					ConnectionBoundary tempcellspace = (ConnectionBoundary) savedMap.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
-					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceBoundaryMemberType();
-					tempcellspacemember.setCellSpaceBoundary(indoorgmlnaviOF.createConnectionBoundary(change2JaxbClass(savedMap, tempcellspace)));
+				} else if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName()
+						.equals("ConnectionBoundary")) {
+
+					ConnectionBoundary tempcellspace = (ConnectionBoundary) savedMap
+							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlnaviOF.createConnectionBoundary(change2JaxbClass(savedMap, tempcellspace)));
 					cellspaceboundarymember.add(tempcellspacemember);
-				}
-				else {
-					
+				} else {
+
 					CellSpaceBoundary tempcellspace = (CellSpaceBoundary) savedMap
 							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
-					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceBoundaryMemberType();
-					tempcellspacemember.setCellSpaceBoundary(indoorgmlcoreOF.createCellSpaceBoundary(change2JaxbClass(savedMap, tempcellspace)));
-					cellspaceboundarymember.add(tempcellspacemember);					
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlcoreOF.createCellSpaceBoundary(change2JaxbClass(savedMap, tempcellspace)));
+					cellspaceboundarymember.add(tempcellspacemember);
 				}
 
 			}
@@ -647,7 +664,7 @@ public class Convert2JaxbClass {
 	}
 
 	public static GeneralSpaceType change2JaxbClass(IndoorGMLMap savedMap, GeneralSpace feature) throws JAXBException {
-		
+
 		GeneralSpaceType newFeature = indoorgmlnaviOF.createGeneralSpaceType();
 		StatePropertyType duality = new StatePropertyType();
 
@@ -675,19 +692,18 @@ public class Convert2JaxbClass {
 			CodeType e = new CodeType();
 			e.setValue(feature.getClassType());
 			newFeature.setClazz(e);
-			
+
 		}
 		if (feature.getFunctionType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getFunctionType());
 			newFeature.setFunction(e);
-			
+
 		}
 		if (feature.getUsageType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getUsageType());
 			newFeature.setUsage(e);
-			
 
 		}
 		newFeature.setId(feature.getId());
@@ -739,8 +755,9 @@ public class Convert2JaxbClass {
 		return newFeature;
 	}
 
-	public static TransitionSpaceType change2JaxbClass(IndoorGMLMap savedMap, TransitionSpace feature) throws JAXBException {
-		
+	public static TransitionSpaceType change2JaxbClass(IndoorGMLMap savedMap, TransitionSpace feature)
+			throws JAXBException {
+
 		TransitionSpaceType newFeature = indoorgmlnaviOF.createTransitionSpaceType();
 		StatePropertyType duality = new StatePropertyType();
 
@@ -768,13 +785,13 @@ public class Convert2JaxbClass {
 			CodeType e = new CodeType();
 			e.setValue(feature.getClassType());
 			newFeature.setClazz(e);
-			
+
 		}
 		if (feature.getFunctionType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getFunctionType());
 			newFeature.setFunction(e);
-			
+
 		}
 		if (feature.getUsageType() != null) {
 			CodeType e = new CodeType();
@@ -832,7 +849,7 @@ public class Convert2JaxbClass {
 
 	public static ConnectionSpaceType change2JaxbClass(IndoorGMLMap savedMap, ConnectionSpace feature)
 			throws JAXBException {
-		
+
 		ConnectionSpaceType newFeature = indoorgmlnaviOF.createConnectionSpaceType();
 		StatePropertyType duality = new StatePropertyType();
 
@@ -860,19 +877,18 @@ public class Convert2JaxbClass {
 			CodeType e = new CodeType();
 			e.setValue(feature.getClassType());
 			newFeature.setClazz(e);
-			
+
 		}
 		if (feature.getFunctionType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getFunctionType());
 			newFeature.setFunction(e);
-			
+
 		}
 		if (feature.getUsageType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getUsageType());
 			newFeature.setUsage(e);
-			
 
 		}
 		newFeature.setId(feature.getId());
@@ -925,7 +941,7 @@ public class Convert2JaxbClass {
 	}
 
 	public static AnchorSpaceType change2JaxbClass(IndoorGMLMap savedMap, AnchorSpace feature) throws JAXBException {
-		
+
 		AnchorSpaceType newFeature = indoorgmlnaviOF.createAnchorSpaceType();
 		StatePropertyType duality = new StatePropertyType();
 
@@ -953,19 +969,18 @@ public class Convert2JaxbClass {
 			CodeType e = new CodeType();
 			e.setValue(feature.getClassType());
 			newFeature.setClazz(e);
-			
+
 		}
 		if (feature.getFunctionType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getFunctionType());
 			newFeature.setFunction(e);
-			
+
 		}
 		if (feature.getUsageType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getUsageType());
 			newFeature.setUsage(e);
-			
 
 		}
 		newFeature.setId(feature.getId());
@@ -1131,6 +1146,88 @@ public class Convert2JaxbClass {
 				cellSpaceBoundaryGeometryType.setGeometry2D(lineProp);
 
 				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	public static NonNavigableSpaceType change2JaxbClass(IndoorGMLMap savedMap, NonNavigableSpace feature)
+			throws JAXBException {
+
+		NonNavigableSpaceType newFeature = indoorgmlnonnaviOF.createNonNavigableSpaceType();
+		StatePropertyType duality = new StatePropertyType();
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		
+		if (feature.getObstacleType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getObstacleType());
+			newFeature.setObstacleType(e);
+		}
+
+		newFeature.setId(feature.getId());
+
+		List<CellSpaceBoundaryPropertyType> partialboundedBy = new ArrayList<CellSpaceBoundaryPropertyType>();
+
+		if (feature.getPartialboundedBy() != null) {
+			for (int i = 0; i < feature.getPartialboundedBy().size(); i++) {
+				CellSpaceBoundaryPropertyType tempcsb = indoorgmlcoreOF.createCellSpaceBoundaryPropertyType();
+				String partialboundedByHref = feature.getPartialboundedBy().get(i).getId();
+				partialboundedByHref = "#" + partialboundedByHref;
+				tempcsb.setHref(partialboundedByHref);
+				partialboundedBy.add(tempcsb);
+			}
+
+			newFeature.setPartialboundedBy(partialboundedBy);
+
+		}
+
+		// TODO setting Geometry 2D
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Solid) {
+				Solid s = (Solid) geom;
+				SolidType solid = Convert2JaxbGeometry.Convert2SolidType(s);
+				JAXBElement<SolidType> jaxbSolid = gmlOF.createSolid(solid);
+				SolidPropertyType solidProp = gmlOF.createSolidPropertyType();
+				solidProp.setAbstractSolid(jaxbSolid);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry3D(solidProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			} else if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry2D(polygonProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
 			}
 		}
 

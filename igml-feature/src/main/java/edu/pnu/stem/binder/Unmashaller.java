@@ -60,7 +60,7 @@ public class Unmashaller {
 		SymbolListener listener;
 
 		context = JAXBContext.newInstance(
-				"net.opengis.indoorgml.core.v_1_0:net.opengis.indoorgml.navigation.v_1_0:net.opengis.gml.v_3_2");
+				"net.opengis.indoorgml.core.v_1_0:net.opengis.indoorgml.navigation.v_1_0:net.opengis.gml.v_3_2_1");
 
 		unmarshaller = context.createUnmarshaller();
 		listener = new SymbolListener(AbstractGMLType.class);
@@ -84,7 +84,7 @@ public class Unmashaller {
 		SymbolListener listener;
 
 		context = JAXBContext.newInstance(
-				"net.opengis.indoorgml.core.v_1_0:net.opengis.indoorgml.navigation.v_1_0:net.opengis.gml.v_3_2");
+				"net.opengis.indoorgml.core.v_1_0:net.opengis.indoorgml.navigation.v_1_0:net.opengis.gml.v_3_2_1");
 
 		unmarshaller = context.createUnmarshaller();
 		listener = new SymbolListener(AbstractGMLType.class);

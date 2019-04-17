@@ -10,6 +10,7 @@ public class NavigableSpace extends CellSpace {
 	private String functionType;
 	private String usageType;
 
+
 	public NavigableSpace(IndoorGMLMap doc, String id) {
 		super(doc, id);
 		// TODO Auto-generated constructor stub
@@ -32,11 +33,10 @@ public class NavigableSpace extends CellSpace {
 		}
 		return feature;
 	}
-
 	public void setClassType(String classType) {
 		this.classType = classType;
-	}
 
+	}
 	public String getClassType() {
 		return classType;
 	}
@@ -45,15 +45,14 @@ public class NavigableSpace extends CellSpace {
 		this.functionType = functionType;
 
 	}
-
 	public String getFunctionType() {
 		return functionType;
 	}
 
 	public void setUsageType(String usageType) {
-		this.usageType = usageType;
-	}
+		this.usageType=usageType;
 
+	}
 	public String getUsageType() {
 		return usageType;
 	}

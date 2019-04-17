@@ -27,7 +27,6 @@ import edu.pnu.stem.feature.core.State;
 import edu.pnu.stem.feature.core.Transition;
 import edu.pnu.stem.feature.core.typeOfTopoExpressionCode;
 import edu.pnu.stem.feature.navigation.AnchorBoundary;
-import edu.pnu.stem.feature.navigation.GeneralSpace;
 import edu.pnu.stem.geometry.jts.Solid;
 import edu.pnu.stem.util.GeometryUtil;
 import net.opengis.gml.v_3_2.AbstractCurveType;
@@ -75,7 +74,6 @@ import net.opengis.indoorgml.core.v_1_0.TransitionPropertyType;
 import net.opengis.indoorgml.core.v_1_0.TransitionType;
 import net.opengis.indoorgml.core.v_1_0.TypeOfTopoExpressionCodeEnumerationType;
 import net.opengis.indoorgml.navigation.v_1_0.AnchorBoundaryType;
-import net.opengis.indoorgml.navigation.v_1_0.GeneralSpaceType;
 
 /**
  * 
@@ -510,7 +508,7 @@ public class Convert2FeatureClass {
 				}
 			} else {
 				//TODO
-				StateType sl = stateProp.getState();
+				StateType sl = stateProp.getState().getValue();
 			}
 			interConnectionList.add(s);
 		}
@@ -585,7 +583,7 @@ public class Convert2FeatureClass {
 		List<State> stateList = new ArrayList<State>();
 
 		for (int i = 0; i < tempML.size(); i++) {
-			StateType tempState = tempML.get(i).getState();
+			StateType tempState = tempML.get(i).getState().getValue();
 			State temp = change2FeatureClass(savedMap, tempState, newFeature.getId());
 			stateList.add(temp);
 		}
