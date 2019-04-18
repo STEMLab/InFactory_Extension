@@ -6,12 +6,12 @@
 	<artifactId>indoorgml-factory</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>IndoorGML Factory</name>
-
+	
 	<organization>
 		<name>STEMLab in Pusan National University</name>
 		<url>http://stem.pnu.edu</url>
 	</organization>
-
+	
 	<licenses>
 		<license>
 			<name>BSD License</name>
@@ -19,18 +19,18 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
+	
 	<properties>
 		<spring.version>5.0.2.RELEASE</spring.version>
 		<jetty.version>9.4.8.v20171121</jetty.version>
 		<ogc-schemas.version>2.6.2-SNAPSHOT</ogc-schemas.version>
 		<jts.version>1.15.0</jts.version>
 	</properties>
-
+	
 	<packaging>pom</packaging>
-
+	
 	<dependencies>
-
+		
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -50,9 +50,23 @@
 			<groupId>org.jvnet.ogc</groupId>
 			<artifactId>gml-v_3_2</artifactId>
 			<version>${ogc-schemas.version}</version>
-		
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/gml-v_3_2-2.6.2-SNAPSHOT.jar</systemPath>
 		</dependency>
-
+		<dependency>
+			<groupId>org.jvnet.ogc</groupId>
+			<artifactId>indoorgml-v_1_0_3</artifactId>
+			<version>${ogc-schemas.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/indoorgml-v_1_0-2.6.2-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hisrc.w3c/xlink-v_1_0 -->
+		<dependency>
+			<groupId>org.hisrc.w3c</groupId>
+			<artifactId>xlink-v_1_0</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		
 		<!-- ======================================================= -->
 		<!-- Spring and Jetty -->
 		<!-- ======================================================= -->
@@ -76,7 +90,7 @@
 			<artifactId>spring-context</artifactId>
 			<version>5.0.2.RELEASE</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
@@ -87,14 +101,14 @@
 			<artifactId>jetty-server</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -105,13 +119,8 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.3</version>
 		</dependency>
-		<dependency>
-			<groupId>org.jvnet.ogc</groupId>
-			<artifactId>indoorgml-v_1_0_3</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<!-- ======================================================= -->
@@ -164,7 +173,7 @@
 					</resources>
 				</configuration>
 			</plugin>
-
+			
 			<!-- ======================================================= -->
 			<!-- JAR packaging. -->
 			<!-- ======================================================= -->
@@ -185,8 +194,8 @@
 					</archive>
 				</configuration>
 			</plugin>
-
-
+			
+			
 			<!-- ======================================================= -->
 			<!-- Maven Jetty. -->
 			<!-- ======================================================= -->
@@ -195,9 +204,9 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 			</plugin>
-
-
-
+			
+			
+			
 			<!-- ======================================================= -->
 			<!-- Source packaging. -->
 			<!-- ======================================================= -->
@@ -247,4 +256,4 @@
 		<module>igml-feature</module>
 		<module>database</module>
 	</modules>
-	</project>
+</project>
