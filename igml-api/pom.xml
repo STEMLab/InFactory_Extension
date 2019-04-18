@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	
 	<parent>
 		<groupId>edu.pnu.stem.igml</groupId>
 		<artifactId>indoorgml-factory</artifactId>
@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>api</artifactId>
 	<packaging>war</packaging>
-
+	
 	<!-- =========================================================== -->
 	<!-- Developers and Contributors -->
 	<!-- =========================================================== -->
@@ -35,15 +35,15 @@
 			</roles>
 		</developer>
 	</developers>
-
-
+	
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>edu.pnu.stem.igml</groupId>
 			<artifactId>feature</artifactId>
@@ -57,12 +57,14 @@
 		<!-- https://mvnrepository.com/artifact/org.jvnet.ogc/gml-v_3_2_1 -->
 		<dependency>
 			<groupId>org.jvnet.ogc</groupId>
-			<artifactId>gml-v_3_2_1</artifactId>
-			<version>2.6.1</version>
+			<artifactId>gml-v_3_2</artifactId>
+			<version>${ogc-schemas.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../lib/gml-v_3_2-2.6.2-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.jvnet.ogc</groupId>
-			<artifactId>indoorgml-v_1_0</artifactId>
+			<artifactId>indoorgml-v_1_0_3</artifactId>
 			<version>${ogc-schemas.version}</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/../lib/indoorgml-v_1_0-2.6.2-SNAPSHOT.jar</systemPath>
@@ -79,7 +81,13 @@
 			<artifactId>h2gis-ext</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.hisrc.w3c/xlink-v_1_0 -->
+		<dependency>
+			<groupId>org.hisrc.w3c</groupId>
+			<artifactId>xlink-v_1_0</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		
 		<!-- ======================================================= -->
 		<!-- Test -->
 		<!-- ======================================================= -->
@@ -101,17 +109,17 @@
 			<version>1.8.2</version>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.locationtech.jts</groupId>
 			<artifactId>jts-core</artifactId>
 			<version>${jts.version}</version>
 		</dependency>
-
+		
 		<!-- ======================================================= -->
 		<!-- Spring and Jetty -->
 		<!-- ======================================================= -->
-
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -138,7 +146,7 @@
 			<version>1.7.25</version>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -154,14 +162,14 @@
 			<artifactId>jetty-server</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -172,9 +180,9 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.3</version>
 		</dependency>
-
+		
 	</dependencies>
-
+	
 	<build>
 		<testResources>
 			<testResource>
@@ -217,7 +225,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
+		
 		<finalName>IndoorGMLFactory</finalName>
 	</build>
 </project>

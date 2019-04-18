@@ -1,7 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	
 	<!-- =========================================================== -->
 	<!-- Developers and Contributors -->
 	<!-- =========================================================== -->
@@ -27,7 +28,7 @@
 			</roles>
 		</developer>
 	</developers>
-
+	
 	<parent>
 		<groupId>edu.pnu.stem.igml</groupId>
 		<artifactId>indoorgml-factory</artifactId>
@@ -56,13 +57,33 @@
 			<artifactId>jaxb2-basics-runtime</artifactId>
 			<version>0.11.1</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.hisrc.w3c/xlink-v_1_0 -->
+		<dependency>
+			<groupId>org.hisrc.w3c</groupId>
+			<artifactId>xlink-v_1_0</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jvnet.ogc</groupId>
+			<artifactId>gml-v_3_2</artifactId>
+			<version>${ogc-schemas.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../lib/gml-v_3_2-2.6.2-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.ogc</groupId>
+			<artifactId>indoorgml-v_1_0_3</artifactId>
+			<version>${ogc-schemas.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../lib/indoorgml-v_1_0-2.6.2-SNAPSHOT.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>org.locationtech.jts</groupId>
 			<artifactId>jts-core</artifactId>
 			<version>${jts.version}</version>
 		</dependency>
-
+		
 		<!-- ======================================================= -->
 		<!-- Spring and Jetty -->
 		<!-- ======================================================= -->
@@ -76,7 +97,7 @@
 			<artifactId>jetty-server</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-
+		
 		<!-- ======================================================= -->
 		<!-- Test -->
 		<!-- ======================================================= -->
@@ -104,18 +125,6 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.9.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet.ogc</groupId>
-			<artifactId>gml-v_3_2</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet.ogc</groupId>
-			<artifactId>indoorgml-v_1_0_3</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-				
 		</dependency>
 	</dependencies>
 </project>

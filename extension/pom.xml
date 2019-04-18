@@ -24,7 +24,7 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>edu.pnu.stem.igml</groupId>
 			<artifactId>feature</artifactId>
@@ -36,6 +36,6 @@
 			<artifactId>jts-core</artifactId>
 			<version>1.15.0</version>
 		</dependency>
-
+		
 	</dependencies>
 </project>
