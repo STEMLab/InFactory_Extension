@@ -1,8 +1,8 @@
 
-<core:IndoorFeatures xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:core="http://www.opengis.net/indoorgml/1.0/core" xmlns:navi="http://www.opengis.net/indoorgml/1.0/navigation" xmlns:nonnavi="http://indoorgml.net/repository/NonNaviSpace" xmlns:ns6="http://indoorgml.net/extensions/PSExt" xmlns:ns7="http://indoorgml.net/extensions/textureext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="t0ed8b1d-4734-b5b2-a32e-1e1f2ef0e8e3" xsi:schemaLocation="http://www.opengis.net/indoorgml/1.0/core http://schemas.opengis.net/indoorgml/1.0/indoorgmlcore.xsd http://www.opengis.net/indoorgml/1.0/navigation http://schemas.opengis.net/indoorgml/1.0/indoorgmlnavi.xsd http://www.indoorgml.net/extensions/indoorgmlnonnavispace http://www.indoorgml.net/extensions/indoorgmlnonnavispace.xsd ">
+<core:IndoorFeatures xmlns:core="http://www.opengis.net/indoorgml/1.0/core" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:navi="http://www.opengis.net/indoorgml/1.0/navigation" xmlns:nonnavi="http://indoorgml.net/repository/NonNaviSpace" xmlns:ns6="http://indoorgml.net/extensions/textureext" xmlns:ns7="http://indoorgml.net/extensions/PSExt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="b90fe009-0d58-4812-a7a1-139f6963e2b3" xsi:schemaLocation="http://www.opengis.net/indoorgml/1.0/core http://schemas.opengis.net/indoorgml/1.0/indoorgmlcore.xsd http://www.opengis.net/indoorgml/1.0/navigation http://schemas.opengis.net/indoorgml/1.0/indoorgmlnavi.xsd http://www.indoorgml.net/extensions/indoorgmlnonnavispace http://www.indoorgml.net/extensions/indoorgmlnonnavispace.xsd ">
     <gml:boundedBy xsi:nil="true"/>
     <core:primalSpaceFeatures>
-        <core:PrimalSpaceFeatures gml:id="c56683f6-8859-29e9-dfad-c1d4efbb79ca">
+        <core:PrimalSpaceFeatures gml:id="k1bde237-31e8-2e26-585d-59ae87a893d4">
             <gml:boundedBy xsi:nil="true"/>
             <core:cellSpaceMember>
                 <nonnavi:NonNavigableSpace gml:id="C1">
@@ -104,14 +104,14 @@
         </core:PrimalSpaceFeatures>
     </core:primalSpaceFeatures>
     <core:multiLayeredGraph>
-        <core:MultiLayeredGraph gml:id="aaa816f6-d81e-6deb-bd93-028abdaa8c92">
+        <core:MultiLayeredGraph gml:id="o9cd528e-b95e-0c3b-9b7c-246459908770">
             <gml:boundedBy xsi:nil="true"/>
-            <core:spaceLayers gml:id="idd2ed9b-7eca-db21-6f1f-2316e1f41b14">
+            <core:spaceLayers gml:id="nb3bd28b-b644-47b8-4b50-0918f1843b73">
                 <gml:boundedBy xsi:nil="true"/>
                 <core:spaceLayerMember>
                     <core:SpaceLayer gml:id="base">
                         <gml:boundedBy xsi:nil="true"/>
-                        <core:nodes gml:id="t075f36b-f7e0-05f7-7c5a-944fca3a179f">
+                        <core:nodes gml:id="qcc97abb-2b7b-25be-d7c4-bfa182d9b5ab">
                             <gml:boundedBy xsi:nil="true"/>
                             <core:stateMember>
 <core:State gml:id="S1">
@@ -127,7 +127,7 @@
 </core:State>
                             </core:stateMember>
                         </core:nodes>
-                        <core:edges gml:id="kd812270-70d7-f10c-642b-102c7ae874ed">
+                        <core:edges gml:id="h607cdb7-084e-e84c-535e-2758da4cc864">
                             <gml:boundedBy xsi:nil="true"/>
                         </core:edges>
                     </core:SpaceLayer>
