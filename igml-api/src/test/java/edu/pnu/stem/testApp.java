@@ -2,7 +2,7 @@ package edu.pnu.stem;
 
 import javax.xml.bind.JAXBException;
 
-import edu.pnu.stem.api.Container;
+import edu.pnu.stem.api.core.Container;
 import edu.pnu.stem.binder.Convert2JaxbClass;
 import edu.pnu.stem.binder.IndoorGMLMap;
 import edu.pnu.stem.binder.Unmashaller;

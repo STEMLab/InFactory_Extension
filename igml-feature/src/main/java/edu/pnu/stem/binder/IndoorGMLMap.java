@@ -54,6 +54,29 @@ public class IndoorGMLMap implements Serializable {
 		
 		collection.put("NonNavigableSpace", new ConcurrentHashMap<String,Object>());
 		
+		collection.put("PublicSafetyDoor", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyWindow", new ConcurrentHashMap<String,Object>());		
+		collection.put("PublicSafetyHatch", new ConcurrentHashMap<String,Object>());
+		
+		collection.put("PublicSafetyRoom", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyElevator", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyStair", new ConcurrentHashMap<String,Object>());
+		
+		collection.put("IndoorPOI", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyIndoorInstallation", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyAlarm", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyTransformer", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyDetector", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyFirePump", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyShutoff", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyMedical", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyGenerator", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetySprinkler", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyKeyBox", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyManual", new ConcurrentHashMap<String,Object>());
+		collection.put("PublicSafetyEscalator", new ConcurrentHashMap<String,Object>());
+		
+		collection.put("TextureSurface", new ConcurrentHashMap<String,Object>());
 		
 		
 	}
@@ -183,6 +206,7 @@ public class IndoorGMLMap implements Serializable {
 			//Excpetion
 		}
 	}
+
 	
 	public void setFeature(String id,String featureName, Object featureValue){
 		if(!hasID(id)){

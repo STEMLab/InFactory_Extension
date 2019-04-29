@@ -19,6 +19,7 @@ import net.opengis.indoorgml.core.v_1_0.IndoorFeaturesType;
 import net.opengis.indoorgml.core.v_1_0.ObjectFactory;
 import net.opengis.indoorgml.navigation.v_1_0.RouteType;
 
+
 public class Mashaller {
 
 	public static void exportIndoorGMLCore(Properties props, String id, String filePath) throws Exception {
@@ -33,18 +34,17 @@ public class Mashaller {
 		for (ConcurrentHashMap.Entry<String, Object> entry : indoorfeatures.entrySet()) {
 			indoorfeaturesId = entry.getKey();
 		}
-		marshalIndoorFeatures(path,
-				Convert2JaxbClass.change2JaxbClass(map, (IndoorFeatures) map.getFeature(indoorfeaturesId)));
+		marshalIndoorFeatures(path,	Convert2JaxbClass.change2JaxbClass(map, (IndoorFeatures) map.getFeature(indoorfeaturesId)));
 	}
 
 	private void marshalRoute(String path, RouteType routeType) throws JAXBException {
 
 		JAXBContext context;
 		Marshaller marshaller;
-
+		
 		context = JAXBContext.newInstance("net.opengis.indoorgml.core.v_1_0" + ":net.opengis.indoorgml.navigation.v_1_0"
 				+ ":net.opengis.gml.v_3_2" + ":net.opengis.nonnavigation.v_1_0");
-
+		
 		File output = null;
 
 		if (path == null) {
@@ -62,8 +62,7 @@ public class Mashaller {
 		JAXBElement<RouteType> jRoute = objectFactory.createRoute(routeType);
 
 		marshaller = context.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
-				"http://www.opengis.net/indoorgml/1.0/core http://schemas.opengis.net/indoorgml/1.0/indoorgmlcore.xsd "
+		marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,	"http://www.opengis.net/indoorgml/1.0/core http://schemas.opengis.net/indoorgml/1.0/indoorgmlcore.xsd "
 						+ "http://www.opengis.net/indoorgml/1.0/navigation http://schemas.opengis.net/indoorgml/1.0/indoorgmlnavi.xsd");
 		try {
 			marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new IndoorGMLNameSpaceMapper());
@@ -76,15 +75,11 @@ public class Mashaller {
 		marshaller.marshal(jRoute, output);
 	}
 
-	public static void marshalIndoorFeatures(String path, IndoorFeaturesType indoorFeaturesType)
-			throws JAXBException, IOException {
+	public static void marshalIndoorFeatures(String path, IndoorFeaturesType indoorFeaturesType)	throws JAXBException, IOException {
 
 		JAXBContext context;
 		Marshaller marshaller;
-		System.out.println("qwe");
-		context = JAXBContext.newInstance("net.opengis.indoorgml.core.v_1_0" + ":net.opengis.indoorgml.navigation.v_1_0"
-				+ ":net.opengis.indoorgml.nonnavigation.v_1_0" + ":net.opengis.gml.v_3_2");
-		System.out.println("qwe12");
+		context = JAXBContext.newInstance("net.opengis.indoorgml.core.v_1_0" + ":net.opengis.indoorgml.navigation.v_1_0" + ":net.opengis.indoorgml.nonnavigation.v_1_0" +":net.opengis.indoorgml.psextension.v_1_0"+ ":net.opengis.gml.v_3_2");
 		File output = null;
 
 		if (path == null) {
@@ -102,10 +97,13 @@ public class Mashaller {
 		JAXBElement<IndoorFeaturesType> jIndoorFeatures = objectFactory.createIndoorFeatures(indoorFeaturesType);
 
 		marshaller = context.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
-				"http://www.opengis.net/indoorgml/1.0/core http://schemas.opengis.net/indoorgml/1.0/indoorgmlcore.xsd "
+		
+		marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,	"http://www.opengis.net/indoorgml/1.0/core http://schemas.opengis.net/indoorgml/1.0/indoorgmlcore.xsd "
 						+ "http://www.opengis.net/indoorgml/1.0/navigation http://schemas.opengis.net/indoorgml/1.0/indoorgmlnavi.xsd "
-						+ "http://www.indoorgml.net/extensions/indoorgmlnonnavispace http://www.indoorgml.net/extensions/indoorgmlnonnavispace.xsd ");
+						+ "http://indoorgml.net/repository/NonNaviSpace http://www.indoorgml.net/extensions/indoorgmlnonnavispace.xsd "
+						+ "http://indoorgml.net/extensions/PSExt http://www.indoorgml.net/extensions/indoorgmlpsextention.xsd "
+						+ "http://indoorgml.net/extensions/textureext http://www.indoorgml.net/extensions/indoorgmltextureextension.xsd ");
+
 		try {
 			marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new IndoorGMLNameSpaceMapper());
 		} catch (PropertyException e) {
@@ -143,11 +141,20 @@ public class Mashaller {
 		public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
 			if (DEFAULT_URI.equals(namespaceUri)) {
 				return DEFAULT_PREFIX;
-			} else if (NAVIGATION_URI.equals(namespaceUri)) {
+			}
+			else if (NAVIGATION_URI.equals(namespaceUri)) {
 				return NAVIGATION_PREFIX;
-			} else if (NONNAVIGATION_URI.equals(namespaceUri)) {
+			}
+			else if (NONNAVIGATION_URI.equals(namespaceUri)) {
 				return NONNAVIGATION_PREFIX;
-			} else if (GML_URI.equals(namespaceUri)) {
+			}
+			else if (PSEXT_URI.equals(namespaceUri)) {
+				return PSEXT_PREFIX;
+			}
+			else if (TEXTURE_URI.equals(namespaceUri)) {
+				return TEXTURE_PREFIX;
+			}		
+			else if (GML_URI.equals(namespaceUri)) {
 				return GML_PREFIX;
 			} else if (XLINK_URI.equals(namespaceUri)) {
 				return XLINK_PREFIX;
@@ -158,7 +165,7 @@ public class Mashaller {
 		@Override
 		public String[] getPreDeclaredNamespaceUris() {
 			// TODO Auto-generated method stub
-			return new String[] { DEFAULT_URI, NAVIGATION_URI, NONNAVIGATION_URI, GML_URI, XLINK_URI, PSEXT_URI, TEXTURE_URI };
+			return new String[] { DEFAULT_URI, NAVIGATION_URI, NONNAVIGATION_URI, PSEXT_URI, TEXTURE_URI, GML_URI, XLINK_URI };
 		}
 	}
 

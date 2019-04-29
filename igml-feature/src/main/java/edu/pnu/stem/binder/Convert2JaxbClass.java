@@ -8,9 +8,29 @@ import javax.xml.bind.JAXBException;
 
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 
+import edu.pnu.stem.feature.PSExt.IndoorPOI;
+import edu.pnu.stem.feature.PSExt.PublicSafetyAlarm;
+import edu.pnu.stem.feature.PSExt.PublicSafetyDetector;
+import edu.pnu.stem.feature.PSExt.PublicSafetyDoor;
+import edu.pnu.stem.feature.PSExt.PublicSafetyElevator;
+import edu.pnu.stem.feature.PSExt.PublicSafetyEscalator;
+import edu.pnu.stem.feature.PSExt.PublicSafetyFirePump;
+import edu.pnu.stem.feature.PSExt.PublicSafetyGenerator;
+import edu.pnu.stem.feature.PSExt.PublicSafetyHatch;
+import edu.pnu.stem.feature.PSExt.PublicSafetyIndoorInstallation;
+import edu.pnu.stem.feature.PSExt.PublicSafetyKeyBox;
+import edu.pnu.stem.feature.PSExt.PublicSafetyManual;
+import edu.pnu.stem.feature.PSExt.PublicSafetyMedical;
+import edu.pnu.stem.feature.PSExt.PublicSafetyRoom;
+import edu.pnu.stem.feature.PSExt.PublicSafetyShutoff;
+import edu.pnu.stem.feature.PSExt.PublicSafetySprinkler;
+import edu.pnu.stem.feature.PSExt.PublicSafetyStair;
+import edu.pnu.stem.feature.PSExt.PublicSafetyTransformer;
+import edu.pnu.stem.feature.PSExt.PublicSafetyWindow;
 import edu.pnu.stem.feature.core.CellSpace;
 import edu.pnu.stem.feature.core.CellSpaceBoundary;
 import edu.pnu.stem.feature.core.Edges;
@@ -31,12 +51,14 @@ import edu.pnu.stem.feature.navigation.AnchorSpace;
 import edu.pnu.stem.feature.navigation.ConnectionBoundary;
 import edu.pnu.stem.feature.navigation.ConnectionSpace;
 import edu.pnu.stem.feature.navigation.GeneralSpace;
-import edu.pnu.stem.feature.navigation.NonNavigableSpace;
 import edu.pnu.stem.feature.navigation.TransitionSpace;
+import edu.pnu.stem.feature.nonnavigation.NonNavigableSpace;
+import edu.pnu.stem.feature.texture.TextureSurface;
 import edu.pnu.stem.geometry.jts.Solid;
 import net.opengis.gml.v_3_2.CodeType;
 import net.opengis.gml.v_3_2.CurvePropertyType;
 import net.opengis.gml.v_3_2.LineStringType;
+import net.opengis.gml.v_3_2.LinearRingType;
 import net.opengis.gml.v_3_2.PointPropertyType;
 import net.opengis.gml.v_3_2.PointType;
 import net.opengis.gml.v_3_2.PolygonType;
@@ -82,16 +104,37 @@ import net.opengis.indoorgml.navigation.v_1_0.GeneralSpaceType;
 import net.opengis.indoorgml.navigation.v_1_0.ObjectFactory;
 import net.opengis.indoorgml.navigation.v_1_0.TransitionSpaceType;
 import net.opengis.indoorgml.nonnavigation.v_1_0.NonNavigableSpaceType;
+import net.opengis.indoorgml.psextension.v_1_0.DoorHandlingType;
+import net.opengis.indoorgml.psextension.v_1_0.IndoorPOIType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyAlarmType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyDetectorType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyDoorType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyElevatorType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyEscalatorType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyFirePumpType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyGeneratorType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyHatchType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyIndoorInstallationType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyKeyBoxType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyLegend;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyManualType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyMedicalType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyRoomType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyShutoffType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetySprinklerType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyStairType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyTransformerType;
+import net.opengis.indoorgml.psextension.v_1_0.PublicSafetyWindowType;
+import net.opengis.indoorgml.textureextension.v_1_0.TextureSurfaceType;
 
 public class Convert2JaxbClass {
 	static net.opengis.indoorgml.core.v_1_0.ObjectFactory indoorgmlcoreOF = new net.opengis.indoorgml.core.v_1_0.ObjectFactory();
 
 	static net.opengis.gml.v_3_2.ObjectFactory gmlOF = new net.opengis.gml.v_3_2.ObjectFactory();
-
 	static ObjectFactory indoorgmlnaviOF = new net.opengis.indoorgml.navigation.v_1_0.ObjectFactory();
-
 	static net.opengis.indoorgml.nonnavigation.v_1_0.ObjectFactory indoorgmlnonnaviOF = new net.opengis.indoorgml.nonnavigation.v_1_0.ObjectFactory();
-
+	static net.opengis.indoorgml.psextension.v_1_0.ObjectFactory indoorgmlPSEOF = new net.opengis.indoorgml.psextension.v_1_0.ObjectFactory();
+	static net.opengis.indoorgml.textureextension.v_1_0.ObjectFactory indoorgmltuextureOF = new net.opengis.indoorgml.textureextension.v_1_0.ObjectFactory();
 	@SuppressWarnings("unchecked")
 	public static CellSpaceType change2JaxbClass(IndoorGMLMap savedMap, CellSpace feature) throws JAXBException {
 
@@ -267,8 +310,7 @@ public class Convert2JaxbClass {
 		return newFeature;
 	}
 
-	static public IndoorFeaturesType change2JaxbClass(IndoorGMLMap savedMap, IndoorFeatures feature)
-			throws JAXBException {
+	static public IndoorFeaturesType change2JaxbClass(IndoorGMLMap savedMap, IndoorFeatures feature)	throws JAXBException {
 		IndoorFeaturesType newFeature = new IndoorFeaturesType();
 		newFeature.setId(feature.getId());
 		if (feature.getPrimalSpaceFeatures() != null) {
@@ -436,12 +478,132 @@ public class Convert2JaxbClass {
 
 		if (feature.getStateMember() != null) {
 			for (int i = 0; i < feature.getStateMember().size(); i++) {
-				State tempstate = (State) savedMap.getFeature(feature.getStateMember().get(i).getId());
-				StateType tempstatetype = change2JaxbClass(savedMap, tempstate);
-				JAXBElement<StateType> jaxbState = indoorgmlcoreOF.createState(tempstatetype);
-				StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
-				tempstatemember.setState(jaxbState);
-				smTypeList.add(tempstatemember);
+				if (feature.getStateMember().get(i).getClass().getSimpleName().equals("IndoorPOI")) {
+					IndoorPOI tempstate = (IndoorPOI) savedMap.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<IndoorPOIType> jaxbState = indoorgmlPSEOF
+							.createIndoorPOI(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName()
+						.equals("PublicSafetyIndoorInstallation")) {
+					PublicSafetyIndoorInstallation tempstate = (PublicSafetyIndoorInstallation) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyIndoorInstallationType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyIndoorInstallation(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyAlarm")) {
+					PublicSafetyAlarm tempstate = (PublicSafetyAlarm) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyAlarmType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyAlarm(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName()
+						.equals("PublicSafetyTransformer")) {
+					PublicSafetyTransformer tempstate = (PublicSafetyTransformer) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyTransformerType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyTransformer(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyDetector")) {
+					PublicSafetyDetector tempstate = (PublicSafetyDetector) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyDetectorType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyDetector(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyFirePump")) {
+					PublicSafetyFirePump tempstate = (PublicSafetyFirePump) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyFirePumpType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyFirePump(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyShutoff")) {
+					PublicSafetyShutoff tempstate = (PublicSafetyShutoff) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyShutoffType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyShutoff(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyMedical")) {
+					PublicSafetyMedical tempstate = (PublicSafetyMedical) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyMedicalType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyMedical(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyGenerator")) {
+					PublicSafetyGenerator tempstate = (PublicSafetyGenerator) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyGeneratorType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyGenerator(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetySprinkler")) {
+					PublicSafetySprinkler tempstate = (PublicSafetySprinkler) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetySprinklerType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetySprinkler(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyKeyBox")) {
+					PublicSafetyKeyBox tempstate = (PublicSafetyKeyBox) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyKeyBoxType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyKeyBox(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyManual")) {
+					PublicSafetyManual tempstate = (PublicSafetyManual) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyManualType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyManual(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else if (feature.getStateMember().get(i).getClass().getSimpleName().equals("PublicSafetyEscalator")) {
+					PublicSafetyEscalator tempstate = (PublicSafetyEscalator) savedMap
+							.getFeature(feature.getStateMember().get(i).getId());
+					JAXBElement<PublicSafetyEscalatorType> jaxbState = indoorgmlPSEOF
+							.createPublicSafetyEscalator(change2JaxbClass(savedMap, tempstate));
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				} else {
+					State tempstate = (State) savedMap.getFeature(feature.getStateMember().get(i).getId());
+					StateType tempstatetype = change2JaxbClass(savedMap, tempstate);
+					JAXBElement<StateType> jaxbState = indoorgmlcoreOF.createState(tempstatetype);
+					StateMemberType tempstatemember = indoorgmlcoreOF.createStateMemberType();
+					tempstatemember.setState(jaxbState);
+					smTypeList.add(tempstatemember);
+
+				}
+
 			}
 
 			newFeature.setStateMember(smTypeList);
@@ -462,7 +624,37 @@ public class Convert2JaxbClass {
 		if (feature.getCellSpaceMember() != null) {
 			for (int i = 0; i < feature.getCellSpaceMember().size(); i++) {
 
-				if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("GeneralSpace")) {
+				if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("PublicSafetyElevator")) {
+
+					PublicSafetyElevator tempcellspace = (PublicSafetyElevator)savedMap.getFeature(feature.getCellSpaceMember().get(i).getId());
+					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
+					tempcellspacemember.setCellSpace(
+							indoorgmlPSEOF.createPublicSafetyElevator(change2JaxbClass(savedMap, tempcellspace)));
+					cellspacemember.add(tempcellspacemember);
+
+				} else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("PublicSafetyStair")) {
+
+					PublicSafetyStair tempcellspace = (PublicSafetyStair) savedMap
+							.getFeature(feature.getCellSpaceMember().get(i).getId());
+					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
+					tempcellspacemember.setCellSpace(
+							indoorgmlPSEOF.createPublicSafetyStair(change2JaxbClass(savedMap, tempcellspace)));
+					cellspacemember.add(tempcellspacemember);
+
+				}
+
+				else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("PublicSafetyRoom")) {
+
+					PublicSafetyRoom tempcellspace = (PublicSafetyRoom) savedMap
+							.getFeature(feature.getCellSpaceMember().get(i).getId());
+					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
+					tempcellspacemember.setCellSpace(
+							indoorgmlPSEOF.createPublicSafetyRoom(change2JaxbClass(savedMap, tempcellspace)));
+					cellspacemember.add(tempcellspacemember);
+
+				}
+
+				else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("GeneralSpace")) {
 
 					GeneralSpace tempcellspace = (GeneralSpace) savedMap
 							.getFeature(feature.getCellSpaceMember().get(i).getId());
@@ -499,14 +691,17 @@ public class Convert2JaxbClass {
 
 				} else if (feature.getCellSpaceMember().get(i).getClass().getSimpleName().equals("NonNavigableSpace")) {
 
-					NonNavigableSpace tempcellspace = (NonNavigableSpace) savedMap.getFeature(feature.getCellSpaceMember().get(i).getId());
+					NonNavigableSpace tempcellspace = (NonNavigableSpace) savedMap
+							.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
-					tempcellspacemember.setCellSpace(indoorgmlnonnaviOF.createNonNavigableSpace(change2JaxbClass(savedMap, tempcellspace)));
+					tempcellspacemember.setCellSpace(
+							indoorgmlnonnaviOF.createNonNavigableSpace(change2JaxbClass(savedMap, tempcellspace)));
 					cellspacemember.add(tempcellspacemember);
 
 				} else {
 
-					CellSpace tempcellspace = (CellSpace) savedMap.getFeature(feature.getCellSpaceMember().get(i).getId());
+					CellSpace tempcellspace = (CellSpace) savedMap
+							.getFeature(feature.getCellSpaceMember().get(i).getId());
 					CellSpaceMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceMemberType();
 					tempcellspacemember
 							.setCellSpace(indoorgmlcoreOF.createCellSpace(change2JaxbClass(savedMap, tempcellspace)));
@@ -539,8 +734,52 @@ public class Convert2JaxbClass {
 					tempcellspacemember.setCellSpaceBoundary(
 							indoorgmlnaviOF.createConnectionBoundary(change2JaxbClass(savedMap, tempcellspace)));
 					cellspaceboundarymember.add(tempcellspacemember);
-				} else {
+				} else if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName()
+						.equals("PublicSafetyDoor")) {
 
+					PublicSafetyDoor tempcellspace = (PublicSafetyDoor) savedMap
+							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlPSEOF.createPublicSafetyDoor(change2JaxbClass(savedMap, tempcellspace)));
+					cellspaceboundarymember.add(tempcellspacemember);
+				} else if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName()
+						.equals("PublicSafetyWindow")) {
+
+					PublicSafetyWindow tempcellspace = (PublicSafetyWindow) savedMap
+							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlPSEOF.createPublicSafetyWindow(change2JaxbClass(savedMap, tempcellspace)));
+					cellspaceboundarymember.add(tempcellspacemember);
+				} else if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName()
+						.equals("PublicSafetyHatch")) {
+
+					PublicSafetyHatch tempcellspace = (PublicSafetyHatch) savedMap
+							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlPSEOF.createPublicSafetyHatch(change2JaxbClass(savedMap, tempcellspace)));
+					cellspaceboundarymember.add(tempcellspacemember);
+				} else if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName()
+						.equals("PublicSafetyHatch")) {
+
+					PublicSafetyHatch tempcellspace = (PublicSafetyHatch) savedMap
+							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
+							.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(
+							indoorgmlPSEOF.createPublicSafetyHatch(change2JaxbClass(savedMap, tempcellspace)));
+					cellspaceboundarymember.add(tempcellspacemember);
+				} else if (feature.getCellSpaceBoundaryMember().get(i).getClass().getSimpleName().equals("TextureSurface")) {
+					TextureSurface tempcellspace = (TextureSurface) savedMap.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
+					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF.createCellSpaceBoundaryMemberType();
+					tempcellspacemember.setCellSpaceBoundary(indoorgmltuextureOF.createTextureSurface(change2JaxbClass(savedMap, tempcellspace)));
+					cellspaceboundarymember.add(tempcellspacemember);
+				} else {
 					CellSpaceBoundary tempcellspace = (CellSpaceBoundary) savedMap
 							.getFeature(feature.getCellSpaceBoundaryMember().get(i).getId());
 					CellSpaceBoundaryMemberType tempcellspacemember = indoorgmlcoreOF
@@ -1178,7 +1417,7 @@ public class Convert2JaxbClass {
 			e.setValue(feature.getDescription());
 			newFeature.setDescription(e);
 		}
-		
+
 		if (feature.getObstacleType() != null) {
 			CodeType e = new CodeType();
 			e.setValue(feature.getObstacleType());
@@ -1234,4 +1473,1326 @@ public class Convert2JaxbClass {
 		return newFeature;
 	}
 
+	public static PublicSafetyDoorType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyDoor feature) {
+		PublicSafetyDoorType newFeature = indoorgmlPSEOF.createPublicSafetyDoorType();
+		TransitionPropertyType duality = new TransitionPropertyType();
+		newFeature.setId(feature.getId());
+
+		if(feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+			newFeature.setId(feature.getId());
+		}
+
+		if(feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getDoorHandling() != null) {
+			newFeature.setDoorHandling(feature.getDoorHandling());
+		}
+		if (feature.getDoorSwing() != null) {
+			newFeature.setDoorSwing(feature.getDoorSwing());			
+		}
+		if (feature.getFireEscape() != null) {
+			newFeature.setFireEscape(Boolean.valueOf(feature.getFireEscape()));
+		}
+		if (feature.getLockType() != null) {
+			newFeature.setLockType(feature.getLockType());
+		}
+		if (feature.getMaterial() != null) {
+			newFeature.setMaterial(feature.getMaterial());
+		}
+		if (feature.getSizeHeight() !=0 ) {
+			newFeature.setSizeHeight(feature.getSizeHeight());
+		}
+		if (feature.getSizeWidth()!= 0) {
+			newFeature.setSizeWidth(feature.getSizeWidth());
+		}
+		
+
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF
+						.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry3D(polygonProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			} else if (geom instanceof LineString) {
+				LineString l = (LineString) geom;
+				LineStringType linestring = Convert2JaxbGeometry.Convert2LineStringType(l);
+				JAXBElement<LineStringType> jaxbLineString = gmlOF.createLineString(linestring);
+				CurvePropertyType lineProp = gmlOF.createCurvePropertyType();
+				lineProp.setAbstractCurve(jaxbLineString);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF
+						.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry2D(lineProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	public static PublicSafetyWindowType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyWindow feature) {
+		PublicSafetyWindowType newFeature = indoorgmlPSEOF.createPublicSafetyWindowType();
+		TransitionPropertyType duality = new TransitionPropertyType();
+		newFeature.setId(feature.getId());
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+			newFeature.setId(feature.getId());
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+			
+		if (feature.getFireEscape() != null) {
+			newFeature.setFireEscape(feature.getFireEscape());
+		}
+		if (feature.getLockType() != null) {
+			newFeature.setLockType(feature.getLockType());
+		}
+		if (feature.getOpenable() != null) {
+			newFeature.setOpenable(feature.getOpenable());
+		}
+		if (feature.getMaterial() != null) {
+			newFeature.setMaterial(feature.getMaterial());
+		}
+		if (feature.getSizeHeight() !=0 ) {
+			newFeature.setSizeHeight(feature.getSizeHeight());
+		}
+		if (feature.getSizeWidth()!= 0) {
+			newFeature.setSizeWidth(feature.getSizeWidth());
+		}
+		if (feature.getWindowHandling() != null) {
+			
+			//newFeature.setWindowHandling(feature.getWindowHandling());
+			newFeature.setWindowHandling(feature.getWindowHandling().toString());
+		}	
+
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF
+						.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry3D(polygonProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			} else if (geom instanceof LineString) {
+				LineString l = (LineString) geom;
+				LineStringType linestring = Convert2JaxbGeometry.Convert2LineStringType(l);
+				JAXBElement<LineStringType> jaxbLineString = gmlOF.createLineString(linestring);
+				CurvePropertyType lineProp = gmlOF.createCurvePropertyType();
+				lineProp.setAbstractCurve(jaxbLineString);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF
+						.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry2D(lineProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	public static PublicSafetyHatchType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyHatch feature) {
+		PublicSafetyHatchType newFeature = indoorgmlPSEOF.createPublicSafetyHatchType();
+		TransitionPropertyType duality = new TransitionPropertyType();
+		newFeature.setId(feature.getId());
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+			newFeature.setId(feature.getId());
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		
+		if (feature.getFireEscape() != null) {
+			newFeature.setFireEscape(feature.getFireEscape());
+		}		
+		if (feature.getHatchLocation() != null) {
+			newFeature.setHatchLocation(feature.getHatchLocation());
+		}
+		if (feature.getLockType() != null) {
+			newFeature.setLockType(feature.getLockType());
+		}
+		if (feature.getOpenable() != null) {
+			newFeature.setOpenable(feature.getOpenable());
+		}
+		if (feature.getMaterial() != null) {
+			newFeature.setMaterial(feature.getMaterial());
+		}
+		if (feature.getSizeLength() !=0 ) {
+			newFeature.setSizeLength(feature.getSizeLength());
+		}
+		if (feature.getSizeWidth()!= 0) {
+			newFeature.setSizeWidth(feature.getSizeWidth());
+		}
+
+
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF
+						.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry3D(polygonProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			} else if (geom instanceof LineString) {
+				LineString l = (LineString) geom;
+				LineStringType linestring = Convert2JaxbGeometry.Convert2LineStringType(l);
+				JAXBElement<LineStringType> jaxbLineString = gmlOF.createLineString(linestring);
+				CurvePropertyType lineProp = gmlOF.createCurvePropertyType();
+				lineProp.setAbstractCurve(jaxbLineString);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF
+						.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry2D(lineProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	public static PublicSafetyRoomType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyRoom feature)
+			throws JAXBException {
+
+		PublicSafetyRoomType newFeature = indoorgmlPSEOF.createPublicSafetyRoomType();
+		StatePropertyType duality = new StatePropertyType();
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getClassType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getClassType());
+			newFeature.setClazz(e);
+
+		}
+		if (feature.getFunctionType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getFunctionType());
+			newFeature.setFunction(e);
+
+		}
+		if (feature.getUsageType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getUsageType());
+			newFeature.setUsage(e);
+		}
+
+		if (feature.getpsRoomType() != null) {
+
+			newFeature.setPSRoomType(feature.getpsRoomType());
+
+		}
+		newFeature.setId(feature.getId());
+
+		List<CellSpaceBoundaryPropertyType> partialboundedBy = new ArrayList<CellSpaceBoundaryPropertyType>();
+
+		if (feature.getPartialboundedBy() != null) {
+			for (int i = 0; i < feature.getPartialboundedBy().size(); i++) {
+				CellSpaceBoundaryPropertyType tempcsb = indoorgmlcoreOF.createCellSpaceBoundaryPropertyType();
+				String partialboundedByHref = feature.getPartialboundedBy().get(i).getId();
+				partialboundedByHref = "#" + partialboundedByHref;
+				tempcsb.setHref(partialboundedByHref);
+				partialboundedBy.add(tempcsb);
+			}
+
+			newFeature.setPartialboundedBy(partialboundedBy);
+
+		}
+
+		// TODO setting Geometry 2D
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Solid) {
+				Solid s = (Solid) geom;
+				SolidType solid = Convert2JaxbGeometry.Convert2SolidType(s);
+				JAXBElement<SolidType> jaxbSolid = gmlOF.createSolid(solid);
+				SolidPropertyType solidProp = gmlOF.createSolidPropertyType();
+				solidProp.setAbstractSolid(jaxbSolid);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry3D(solidProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			} else if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry2D(polygonProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	public static PublicSafetyElevatorType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyElevator feature)
+			throws JAXBException {
+
+		PublicSafetyElevatorType newFeature = indoorgmlPSEOF.createPublicSafetyElevatorType();
+		StatePropertyType duality = new StatePropertyType();
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getClassType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getClassType());
+			newFeature.setClazz(e);
+
+		}
+		if (feature.getFunctionType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getFunctionType());
+			newFeature.setFunction(e);
+
+		}
+		if (feature.getUsageType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getUsageType());
+			newFeature.setUsage(e);
+		}
+
+		newFeature.setId(feature.getId());
+
+		List<CellSpaceBoundaryPropertyType> partialboundedBy = new ArrayList<CellSpaceBoundaryPropertyType>();
+
+		if (feature.getPartialboundedBy() != null) {
+			for (int i = 0; i < feature.getPartialboundedBy().size(); i++) {
+				CellSpaceBoundaryPropertyType tempcsb = indoorgmlcoreOF.createCellSpaceBoundaryPropertyType();
+				String partialboundedByHref = feature.getPartialboundedBy().get(i).getId();
+				partialboundedByHref = "#" + partialboundedByHref;
+				tempcsb.setHref(partialboundedByHref);
+				partialboundedBy.add(tempcsb);
+			}
+
+			newFeature.setPartialboundedBy(partialboundedBy);
+
+		}
+
+		// TODO setting Geometry 2D
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Solid) {
+				Solid s = (Solid) geom;
+				SolidType solid = Convert2JaxbGeometry.Convert2SolidType(s);
+				JAXBElement<SolidType> jaxbSolid = gmlOF.createSolid(solid);
+				SolidPropertyType solidProp = gmlOF.createSolidPropertyType();
+				solidProp.setAbstractSolid(jaxbSolid);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry3D(solidProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			} else if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry2D(polygonProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	public static PublicSafetyStairType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyStair feature)
+			throws JAXBException {
+
+		PublicSafetyStairType newFeature = indoorgmlPSEOF.createPublicSafetyStairType();
+		StatePropertyType duality = new StatePropertyType();
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getClassType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getClassType());
+			newFeature.setClazz(e);
+
+		}
+		if (feature.getFunctionType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getFunctionType());
+			newFeature.setFunction(e);
+
+		}
+		if (feature.getUsageType() != null) {
+			CodeType e = new CodeType();
+			e.setValue(feature.getUsageType());
+			newFeature.setUsage(e);
+		}
+
+		newFeature.setId(feature.getId());
+
+		List<CellSpaceBoundaryPropertyType> partialboundedBy = new ArrayList<CellSpaceBoundaryPropertyType>();
+
+		if (feature.getPartialboundedBy() != null) {
+			for (int i = 0; i < feature.getPartialboundedBy().size(); i++) {
+				CellSpaceBoundaryPropertyType tempcsb = indoorgmlcoreOF.createCellSpaceBoundaryPropertyType();
+				String partialboundedByHref = feature.getPartialboundedBy().get(i).getId();
+				partialboundedByHref = "#" + partialboundedByHref;
+				tempcsb.setHref(partialboundedByHref);
+				partialboundedBy.add(tempcsb);
+			}
+
+			newFeature.setPartialboundedBy(partialboundedBy);
+
+		}
+
+		// TODO setting Geometry 2D
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Solid) {
+				Solid s = (Solid) geom;
+				SolidType solid = Convert2JaxbGeometry.Convert2SolidType(s);
+				JAXBElement<SolidType> jaxbSolid = gmlOF.createSolid(solid);
+				SolidPropertyType solidProp = gmlOF.createSolidPropertyType();
+				solidProp.setAbstractSolid(jaxbSolid);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry3D(solidProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			} else if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceGeometryType cellSpaceGeometryType = indoorgmlcoreOF.createCellSpaceGeometryType();
+				cellSpaceGeometryType.setGeometry2D(polygonProp);
+
+				newFeature.setCellSpaceGeometry(cellSpaceGeometryType);
+			}
+		}
+
+		return newFeature;
+	}
+
+	static IndoorPOIType change2JaxbClass(IndoorGMLMap savedMap, IndoorPOI feature) throws JAXBException {
+		IndoorPOIType newFeature = new IndoorPOIType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyIndoorInstallationType change2JaxbClass(IndoorGMLMap savedMap,
+			PublicSafetyIndoorInstallation feature) throws JAXBException {
+		PublicSafetyIndoorInstallationType newFeature = new PublicSafetyIndoorInstallationType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyAlarmType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyAlarm feature)
+			throws JAXBException {
+		PublicSafetyAlarmType newFeature = new PublicSafetyAlarmType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyTransformerType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyTransformer feature)
+			throws JAXBException {
+		PublicSafetyTransformerType newFeature = new PublicSafetyTransformerType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyDetectorType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyDetector feature)
+			throws JAXBException {
+		PublicSafetyDetectorType newFeature = new PublicSafetyDetectorType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyFirePumpType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyFirePump feature)
+			throws JAXBException {
+		PublicSafetyFirePumpType newFeature = new PublicSafetyFirePumpType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyShutoffType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyShutoff feature)
+			throws JAXBException {
+		PublicSafetyShutoffType newFeature = new PublicSafetyShutoffType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyMedicalType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyMedical feature)
+			throws JAXBException {
+		PublicSafetyMedicalType newFeature = new PublicSafetyMedicalType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyGeneratorType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyGenerator feature)
+			throws JAXBException {
+		PublicSafetyGeneratorType newFeature = new PublicSafetyGeneratorType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetySprinklerType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetySprinkler feature)
+			throws JAXBException {
+		PublicSafetySprinklerType newFeature = new PublicSafetySprinklerType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyKeyBoxType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyKeyBox feature)
+			throws JAXBException {
+		PublicSafetyKeyBoxType newFeature = new PublicSafetyKeyBoxType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyManualType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyManual feature)
+			throws JAXBException {
+		PublicSafetyManualType newFeature = new PublicSafetyManualType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+
+	static PublicSafetyEscalatorType change2JaxbClass(IndoorGMLMap savedMap, PublicSafetyEscalator feature)
+			throws JAXBException {
+		PublicSafetyEscalatorType newFeature = new PublicSafetyEscalatorType();
+
+		List<TransitionPropertyType> connects = new ArrayList<TransitionPropertyType>();
+
+		if (feature.getConnects() != null) {
+			for (int i = 0; i < feature.getConnects().size(); i++) {
+				TransitionPropertyType tempTransitionPropertyType = new TransitionPropertyType();
+				String href = feature.getConnects().get(i).getId();
+				href = "#" + href;
+				tempTransitionPropertyType.setHref(href);
+				connects.add(tempTransitionPropertyType);
+			}
+			newFeature.setConnects(connects);
+		}
+
+		Point geom = (Point) feature.getGeometry();
+		if (geom != null) {
+			PointType point = Convert2JaxbGeometry.Convert2PointType(geom);
+			PointPropertyType pointProp = gmlOF.createPointPropertyType();
+			pointProp.setPoint(point);
+			newFeature.setGeometry(pointProp);
+		}
+
+		if (feature.getDuality() != null) {
+			CellSpacePropertyType duality = indoorgmlcoreOF.createCellSpacePropertyType();
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+		}
+		// feature.geometry
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		if (feature.getPublicSafetyLegend() != null) {
+			newFeature.setPSLegend(feature.getPublicSafetyLegend());
+		}
+
+		newFeature.setId(feature.getId());
+		return newFeature;
+	}
+	public static TextureSurfaceType change2JaxbClass(IndoorGMLMap savedMap, TextureSurface feature) {
+		TextureSurfaceType newFeature = indoorgmltuextureOF.createTextureSurfaceType();
+		TransitionPropertyType duality = new TransitionPropertyType();
+		newFeature.setId(feature.getId());
+
+		if (feature.getDuality() != null) {
+			String href = feature.getDuality().getId();
+			href = "#" + href;
+			duality.setHref(href);
+			newFeature.setDuality(duality);
+			newFeature.setId(feature.getId());
+		}
+
+		if (feature.getName() != null) {
+			List<CodeType> name = new ArrayList<CodeType>();
+			CodeType e = new CodeType();
+			e.setValue(feature.getName());
+			name.add(e);
+			newFeature.setName(name);
+		}
+
+		if (feature.getDescription() != null) {
+			StringOrRefType e = new StringOrRefType();
+			e.setValue(feature.getDescription());
+			newFeature.setDescription(e);
+		}
+		
+
+		Geometry geom = (Geometry) feature.getGeometry();
+		if (geom != null) {
+
+			if (geom instanceof Polygon) {
+				Polygon p = (Polygon) geom;
+				PolygonType polygon = Convert2JaxbGeometry.Convert2SurfaceType(p);
+				JAXBElement<PolygonType> jaxbPolygon = gmlOF.createPolygon(polygon);
+				SurfacePropertyType polygonProp = gmlOF.createSurfacePropertyType();
+				polygonProp.setAbstractSurface(jaxbPolygon);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry3D(polygonProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			} else if (geom instanceof LineString) {
+				LineString l = (LineString) geom;
+				LineStringType linestring = Convert2JaxbGeometry.Convert2LineStringType(l);
+				JAXBElement<LineStringType> jaxbLineString = gmlOF.createLineString(linestring);
+				CurvePropertyType lineProp = gmlOF.createCurvePropertyType();
+				lineProp.setAbstractCurve(jaxbLineString);
+
+				CellSpaceBoundaryGeometryType cellSpaceBoundaryGeometryType = indoorgmlcoreOF.createCellSpaceBoundaryGeometryType();
+				cellSpaceBoundaryGeometryType.setGeometry2D(lineProp);
+
+				newFeature.setCellSpaceBoundaryGeometry(cellSpaceBoundaryGeometryType);
+			}
+		}
+		
+		Geometry imageCoodi = feature.getTexturedImageCoodinates();
+		
+		if (imageCoodi != null) {
+			if (imageCoodi instanceof Polygon) {
+				Polygon p = (Polygon) imageCoodi;
+				LinearRingType linearRingType = Convert2JaxbGeometry.Convert2LinearRingType((LinearRing)p.getExteriorRing());
+				newFeature.setTextureCoordinate(linearRingType);
+				
+
+			}
+			else {
+				System.out.println("imageCoodi is not Polygon");
+			}
+			
+		}
+		if (feature.getTexturedImageURL() != null) {
+			newFeature.setTextureImage(feature.getTexturedImageURL());
+		}
+		
+		
+
+		return newFeature;
+	}
 }

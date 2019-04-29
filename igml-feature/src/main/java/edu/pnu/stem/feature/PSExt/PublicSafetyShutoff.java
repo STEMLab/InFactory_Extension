@@ -1,0 +1,28 @@
+package edu.pnu.stem.feature.PSExt;
+
+import edu.pnu.stem.binder.IndoorGMLMap;
+
+public class PublicSafetyShutoff extends PublicSafetyIndoorInstallation{
+
+	public PublicSafetyShutoff(IndoorGMLMap doc, String id) {
+		super(doc, id);
+		// TODO Auto-generated constructor stub
+	}
+	public void setParent(PublicSafetyIndoorInstallation parent) {
+		PublicSafetyIndoorInstallation found = null;
+		found = (PublicSafetyIndoorInstallation) indoorGMLMap.getFeature(parent.getId());
+		if (found == null) {
+			indoorGMLMap.setFutureFeature(parent.getId(), parent);
+		}
+		this.parentId = parent.getId();
+	}
+	public PublicSafetyIndoorInstallation getPublicSafetyIndoorInstallation() {
+		PublicSafetyIndoorInstallation feature = null;
+		feature = (PublicSafetyIndoorInstallation) indoorGMLMap.getFeature(this.parentId);
+		if (feature == null) {
+			feature = (PublicSafetyIndoorInstallation) indoorGMLMap.getFutureFeature(this.parentId);
+		}
+		return feature;
+	}
+
+}

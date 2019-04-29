@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import edu.pnu.stem.api.config.AppInitializer;
+import edu.pnu.stem.api.core.Container;
 /**
  * @author hyung
  *
